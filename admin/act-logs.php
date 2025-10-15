@@ -1,0 +1,494 @@
+<?php
+
+session_start();
+include('config/dbcon.php');
+$currentPage="act_logs";
+$hide_side="False";
+include('../admin/includes/header.php');
+include('../admin/includes/navbar.php');
+
+ 
+?>
+<style>
+  .body{
+    background-color: rgba(190, 190, 190);
+  }
+</style>
+<div class="container mw-100 p-3 m-0" style="width:100%;height:100vh;background-color: rgba(190, 190, 190);">
+  <div class="row">
+    <div class="col-xxl-12 col-xl-12 col-md-12 col-sm-12 col-12">
+      <div class="container card pt-3 mw-100 m-0" style="width:99%;">
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Activity Logs</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <hr class="hr fw-bold">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-md-12">
+          <table id="example" class="table table-striped border" style="width:100%;font-size:12px;">
+            <thead>
+                <tr>
+                    <th class="text-center">User</th>
+                    <th class="text-center">Position</th>
+                    <th class="text-center">Activity</th>
+                    <th class="text-center">Date & Time</th>
+                </tr>
+            </thead>
+            <tbody>
+              <?php
+                $count=1;
+                $query = "SELECT * FROM `log_monitoring` ";
+                $query_run = mysqli_query($con,$query);
+                if($query_run){
+                  if(mysqli_num_rows($query_run) > 0){
+                    foreach($query_run as $row){
+                      $date = new DateTime($row['date']);
+                      $date = $date->format('F d, Y')
+                ?>
+                <tr>
+                  <td class="text-center"><?= $row['name']; ?></td>
+                  <td class="text-center"><?= $row['position']; ?></td>
+                  <td class="text-center"><?= $row['activity']; ?></td>
+                  <td class="text-center"><?= $date. " ".$row['time_action']; ?></td>
+                </tr>
+              <?php
+                    }
+                  }
+                }
+              ?> 
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.active-btn {
+  background-color: rgba(63, 147, 245, 1);
+  color: white; /* Text color for contrast */
+  border: none; /* Remove default border */
+  padding: 10px 20px; /* Add padding for better appearance */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  font-weight: bold; /* Bold text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.active-btn:hover {
+  background-color: rgba(63, 147, 245, 0.9); /* Slightly lighter color on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+.active-btn:active {
+  background-color: rgba(63, 147, 245, 0.8); /* Darker color when button is pressed */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1); /* Reduced shadow when pressed */
+  transform: translateY(0); /* Reset lift effect when button is pressed */
+}
+
+.not-active-btn {
+  background-color: rgba(239, 237, 237, 1);
+  color: black; /* Text color for contrast */
+  border: none; /* Remove default border */
+  padding: 10px 20px; /* Add padding for better appearance */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  font-weight: bold; /* Bold text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+.not-active-btn:hover {
+  background-color: rgba(239, 237, 237, 0.9); /* Slightly lighter color on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+}
+</style>
+<!-- REGISTRATION DETAIL -->
+<div class="modal fade classname1" id="editstudent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addstudentlabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width:695px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addstudentlabel">Student Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-start ps-0 ms-0 pb-0 mb-0">
+              <nav class="navbar navbar-expand-lg navbar-light pb-0">
+                  <div class="container-fluid ps-0 ms-0">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarScroll">
+                      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                        <li class="nav-item">
+                          <button class="me-1 nav-link active active-btn">Registration Details</button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="me-1 nav-link not-active-btn " data-bs-toggle="modal" data-bs-target="#editstudent2" onclick="showParent()">Parent Information</button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="me-1 nav-link not-active-btn" data-bs-toggle="modal" data-bs-target="#editstudent3" onclick="showUpdated()">Updated Image</button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </nav>
+            </div>
+          </div>
+          <div class="row card">
+            <div class="container pt-2">
+              <div class="row">
+                <!-- LEFT HALF -->
+                <div class="col-md-3 p-0 ps-1">
+                  <div class="container-fluid p-0">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <img src="../images/admin.jpg" alt="" style="height:135px;">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label class="form-label fw-light">Teacher In-charge:</label>
+                        <input type="text" name="teacher_in_charge" class="form-control black-border" required>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- RIGHT HALF -->
+                <div class="col-md-9">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label class="form-label fw-light">Student Name</label>
+                        <input type="text" name="student_name" class="form-control black-border" required>
+                      </div>
+                      <div class="col-md-2">
+                        <label class="form-label fw-light">Age</label>
+                        <input type="number" name="age" class="form-control black-border" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label fw-light">Date of Birth</label>
+                        <input type="date" name="date_of_birth" class="form-control black-border" required>
+                      </div>
+                    </div>
+                    <div class="row mt-1">
+                      <div class="col-md-3">
+                        <label class="form-label fw-light">Sex</label>
+                        <select class="form-select form-select-sm" name="sex" aria-label=".form-select-sm example" required>
+                          <option selected hidden></option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-light">Diagnosis</label>
+                        <select class="form-select form-select-sm" name="diagnosis" aria-label=".form-select-sm example" required>
+                          <option selected hidden></option>
+                          <option value="diagnosis_1">Diagnosis 1</option>
+                          <option value="diagnosis_2">Diagnosis 2</option>
+                        </select>
+                      </div>
+                      <div class="col-md-3">
+                      </div>
+                    </div>
+                    <div class="row mt-1">
+                      <div class="col-md-8">
+                        <label class="form-label fw-light">Address</label>
+                        <input type="text" name="name" class="form-control black-border" required>
+                      </div>
+                      <div class="col-md-4">
+                      </div>
+                    </div>
+                    <div class="row mt-1 mb-2">
+                      <div class="col-md-7">
+                        <label class="form-label fw-light">Registration No.</label>
+                        <input type="text" name="name" class="form-control black-border" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label fw-light">Date Enrolled</label>
+                        <input type="date" name="name" class="form-control black-border" required>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-primary">Update</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- PARENT INFORMATION -->
+<div class="modal fade classname2" id="editstudent2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addstudentlabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width:695px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addstudentlabel">Student Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-start ps-0 ms-0 pb-0 mb-0">
+              <nav class="navbar navbar-expand-lg navbar-light pb-0">
+                  <div class="container-fluid ps-0 ms-0">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarScroll">
+                      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                      <li class="nav-item">
+                          <button class="me-1 nav-link not-active-btn" aria-current="page" data-bs-toggle="modal" data-bs-target="#editstudent" onclick="showRegistration()">Registration Details</button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="me-1 nav-link active active-btn ">Parent Information</button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="me-1 nav-link not-active-btn" data-bs-toggle="modal" data-bs-target="#editstudent3" onclick="showUpdated()">Updated Image</button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </nav>
+            </div>
+          </div>
+          <div class="row card">
+            <div class="container pt-2">
+              <div class="row">
+                <!-- LEFT HALF -->
+                <div class="col-md-3 p-0 ps-1">
+                  <div class="container-fluid p-0">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <img src="../images/admin.jpg" alt="" style="height:142px;">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label class="form-label fw-light">Teacher In-charge:</label>
+                        <input type="text" name="teacher_in_charge" class="form-control black-border" required>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- RIGHT HALF -->
+                <div class="col-md-9">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label class="form-label fw-light">Guardian Name</label>
+                        <input type="text" name="guardian_name" class="form-control black-border" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label fw-light">Relationship</label>
+                        <input type="text" name="relationship" class="form-control black-border" required>
+                      </div>
+                    </div>
+                    <div class="row mt-1">
+                      <div class="col-md-6">
+                        <label class="form-label fw-light">Contact Number</label>
+                        <input type="number" name="contact_no" class="form-control black-border" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-light">Email</label>
+                        <input type="email" name="guardian_email" class="form-control black-border" required>
+                      </div>
+                    </div>
+                    <div class="row mt-1 mb-2">
+                      <div class="col-md-8">
+                        <label class="form-label fw-light">Address</label>
+                        <input type="text" name="name" class="form-control black-border" required>
+                      </div>
+                      <div class="col-md-4">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-primary">Update</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- UPDATED IMAGE -->
+<div class="modal fade classname3" id="editstudent3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addstudentlabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="width:695px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addstudentlabel">Student Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 text-start ps-0 ms-0 pb-0 mb-0">
+              <nav class="navbar navbar-expand-lg navbar-light pb-0">
+                  <div class="container-fluid ps-0 ms-0">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarScroll">
+                      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                      <li class="nav-item">
+                          <button class="me-1 nav-link not-active-btn" aria-current="page" data-bs-toggle="modal" data-bs-target="#editstudent" onclick="showRegistration()">Registration Details</button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="me-1 nav-link not-active-btn " data-bs-toggle="modal" data-bs-target="#editstudent2" onclick="showParent()">Parent Information</button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="me-1 nav-link active active-btn">Updated Image</button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </nav>
+            </div>
+          </div>
+          <div class="row card">
+            <div class="container pt-2">
+              <div class="row">
+                <!-- LEFT HALF -->
+                <div class="col-md-3 p-0 ps-1">
+                  <div class="container-fluid p-0">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <img src="../images/admin.jpg" alt="" style="height:135px;">
+                      </div>
+                    </div>
+                    <div class="row mb-2">
+                      <div class="col-md-12">
+                        <label class="form-label fw-light">Teacher In-charge:</label>
+                        <input type="text" name="teacher_in_charge" class="form-control black-border" required>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- RIGHT HALF -->
+                <div class="col-md-9">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label for="" class="fw-bold">Upload Image</label>
+                        <input type="file" class="form-control">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <hr class="hr">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-primary">Update</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  new DataTable('#example');
+</script>
+<script>
+    // PARA LUMABAS AGAD YUNG MODAL
+    //document.addEventListener('DOMContentLoaded', function () {
+    //  var myModal = new bootstrap.Modal(document.getElementById('addstudent'));
+    //  myModal.show();
+    //});
+
+    function showRegistration() {
+      // Select all elements with the class 'classname1' and show them
+      var elementsToShow = document.querySelectorAll('.classname1');
+      elementsToShow.forEach(function(element) {
+        element.style.display = 'block'; // Show element
+      });
+
+      var elementsToHide = document.querySelectorAll('.classname2');
+      elementsToHide.forEach(function(element) {
+        element.style.display = 'none'; // Hide element
+      });
+      var elementsToHide = document.querySelectorAll('.classname3');
+      elementsToHide.forEach(function(element) {
+        element.style.display = 'none'; // Hide element
+      });
+      document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.querySelectorAll('.classname1'));
+        myModal.show();
+      });
+    }
+    function showParent() {
+      // Select all elements with the class 'classname1' and show them
+      var elementsToShow = document.querySelectorAll('.classname1');
+      elementsToShow.forEach(function(element) {
+        element.style.display = 'none'; // Show element
+      });
+
+      var elementsToHide = document.querySelectorAll('.classname2');
+      elementsToHide.forEach(function(element) {
+        element.style.display = 'block'; // Hide element
+      });
+      var elementsToHide = document.querySelectorAll('.classname3');
+      elementsToHide.forEach(function(element) {
+        element.style.display = 'none'; // Hide element
+      });
+      document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.querySelectorAll('.classname2'));
+        myModal.show();
+      });
+    }
+    function showUpdated() {
+      // Select all elements with the class 'classname1' and show them
+      var elementsToShow = document.querySelectorAll('.classname1');
+      elementsToShow.forEach(function(element) {
+        element.style.display = 'none'; // Show element
+      });
+
+      var elementsToHide = document.querySelectorAll('.classname2');
+      elementsToHide.forEach(function(element) {
+        element.style.display = 'none'; // Hide element
+      });
+      var elementsToHide = document.querySelectorAll('.classname3');
+      elementsToHide.forEach(function(element) {
+        element.style.display = 'block'; // Hide element
+      });
+      document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.querySelectorAll('.classname3'));
+        myModal.show();
+      });
+    }
+  </script>
+<script src="../admin/js/scripts.js?v=<?php echo time(); ?>"></script>
+<?php
+  include('../admin/includes/footer.php');
+?>

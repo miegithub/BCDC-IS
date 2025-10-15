@@ -1,0 +1,30 @@
+.line-with-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 20px 0;
+}
+
+.line-with-dots::before, 
+.line-with-dots::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: black; /* Color of the dots */
+    border-radius: 50%;
+}
+
+.line-with-dots::before {
+    margin-right: 10px; /* Space between dot and line */
+}
+
+.line-with-dots::after {
+    margin-left: 10px; /* Space between dot and line */
+}
+
+.line-with-dots span {
+    display: block;
+    flex: 1;
+    border-bottom: 2px solid black; /* Color of the line */
+}
